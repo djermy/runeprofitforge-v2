@@ -1,0 +1,35 @@
+services:
+  RS-psql:
+    container_name: "RS-psql"
+    image: bitnami/postgresql:14
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    network_mode: "host"
+    environment:
+      POSTGRES_DB: "RS"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      ALLOW_IP: 0.0.0.0/0
+    volumes:
+      - RS_psql:/bitnami/postgresql
+
+  RS-pgadmin:
+    container_name: "RS-pgadmin"
+    image: dpage/pgadmin4
+    ports:
+      - 5555:80
+    depends_on:
+      - RS-psql
+    network_mode: host
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "postgres@shadow.com"
+      PGADMIN_DEFAULT_PASSWORD: "password"
+      PGADMIN_CONFIG_LOGIN_BANNER: '"Email: postgres@shadow.com Pass: password"'
+    volumes:
+      - RS_pgadmin:/var/lib/pgadmin
+
+volumes:
+  RS_psql:
+  RS_pgadmin:
